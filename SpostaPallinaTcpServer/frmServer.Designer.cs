@@ -34,11 +34,11 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(726, 397);
+            ClientSize = new Size(244, 124);
             Name = "frmServer";
             Text = "Form1";
             Load += frmServer_Load;
-            MouseClick += this.frmServer_MouseClick;
+            MouseClick += frmServer_MouseClick;
             ResumeLayout(false);
         }
 

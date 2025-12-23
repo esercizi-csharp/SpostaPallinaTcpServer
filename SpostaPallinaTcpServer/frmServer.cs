@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
@@ -7,7 +6,7 @@ namespace SpostaPallinaTcpServer;
 public partial class frmServer : Form
 {
     private TcpListener? _tcpListener;
-    private List<Client> _clients = new List<Client>();
+    private readonly List<Client> _clients = new List<Client>();
 
     public frmServer()
     {
@@ -21,13 +20,11 @@ public partial class frmServer : Form
 
     private void frmServer_MouseClick(object? sender, MouseEventArgs e)
     {
-        Log($"Mouse click at {e.X},{e.Y}");
         for (int index = 0; index < _clients.Count;)
         {
             Client client = _clients[index];
             if (client.TcpClient.Connected == false)
             {
-                Log("Client disconnected, removing from list");
                 _clients.RemoveAt(index);
                 continue;
             }
@@ -38,9 +35,11 @@ public partial class frmServer : Form
                 client.StreamWriter.WriteLine(message);
                 index++;
             }
-            catch (Exception ex)
+            catch
             {
-                Log($"Error sending to client: {ex.Message}. Removing from list");
+                client.StreamWriter.Close();
+                client.NetworkStream.Close();
+                client.TcpClient.Close();
                 _clients.RemoveAt(index);
             }
         }
@@ -59,7 +58,6 @@ public partial class frmServer : Form
         while (_tcpListener != null)
         {
             var tcpClient = await _tcpListener.AcceptTcpClientAsync();
-            Log("New client connected");
             var networkStream = tcpClient.GetStream();
             var streamWriter = new StreamWriter(networkStream) { AutoFlush = true };
             var client = new Client
@@ -70,11 +68,5 @@ public partial class frmServer : Form
             };
             _clients.Add(client);
         }
-    }
-
-
-    private void Log(string content)
-    {
-        Debug.WriteLine(content);
     }
 }

@@ -63,7 +63,7 @@
             // lblBall
             // 
             lblBall.AutoSize = true;
-            lblBall.Location = new Point(351, 194);
+            lblBall.Location = new Point(57, 56);
             lblBall.Name = "lblBall";
             lblBall.Size = new Size(14, 15);
             lblBall.TabIndex = 3;
@@ -73,7 +73,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(266, 102);
             Controls.Add(lblBall);
             Controls.Add(btnConnect);
             Controls.Add(txtServerAddress);

@@ -14,31 +14,24 @@ public partial class frmClient : Form
         string host = txtServerAddress.Text;
         int port = 1234;
 
-        try
+        using TcpClient client = new TcpClient();
+        await client.ConnectAsync(host, port);
+        await using NetworkStream networkStream = client.GetStream();
+        using StreamReader reader = new StreamReader(networkStream);
+        while (true)
         {
-            using TcpClient client = new TcpClient();
-            await client.ConnectAsync(host, port);
-            await using NetworkStream networkStream = client.GetStream();
-            using StreamReader reader = new StreamReader(networkStream);
-            while (true)
-            {
-                string receivedMessage = await reader.ReadLineAsync();
-                if (receivedMessage == null)
-                    break;
+            string? receivedMessage = await reader.ReadLineAsync();
+            if (receivedMessage == null)
+                break;
 
-                string[] parts = receivedMessage.Split(',');
-                if (parts.Length == 2 &&
-                    int.TryParse(parts[0], out int x) &&
-                    int.TryParse(parts[1], out int y))
-                {
-                    lblBall.Left = x;
-                    lblBall.Top = y;
-                }
+            string[] parts = receivedMessage.Split(',');
+            if (parts.Length == 2 &&
+                int.TryParse(parts[0], out int x) &&
+                int.TryParse(parts[1], out int y))
+            {
+                lblBall.Left = x;
+                lblBall.Top = y;
             }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error: {ex.Message}");
         }
     }
 }
